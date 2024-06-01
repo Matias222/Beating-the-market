@@ -133,6 +133,7 @@ def req_betway():
     options.set_capability(
             "goog:loggingPrefs", {"performance": "ALL"}
         )
+
     driver = webdriver.Chrome(options=options)
 
     driver.get("https://betway.com/es/sports/sct/soccer/copa-america-2024")
