@@ -3,7 +3,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from escribir_csv import append_csv
+from datetime import datetime
 from bs4 import BeautifulSoup
+
 import requests, time
 
 def extraer_fecha(cadena):
@@ -33,6 +36,7 @@ def req_apuesta_total():
     apuesta_total=requests.get("https://sb2frontend-altenar2.biahosted.com/api/Sportsbook/GetEvents?timezoneOffset=300&langId=4&skinName=apuestatotal1&configId=1&culture=es-ES&countryCode=PE&deviceType=Mobile&numformat=en&integration=apuestatotal1&sportids=66&categoryids=0&champids=3147&group=AllEvents&period=periodall&withLive=false&outrightsDisplay=none&marketTypeIds=&couponType=0&marketGroupId=0&startDate=2024-05-27T02%3A09%3A00.000Z&endDate=2024-06-03T02%3A09%3A00.000Z")
 
     dic=apuesta_total.json()
+    arr=[]
 
     for i in dic["Result"]["Items"][0]["Events"]:
         
@@ -52,6 +56,11 @@ def req_apuesta_total():
         print(1/cuota_a+1/cuota_x+1/cuota_b)
 
         print("-"*50)
+        print()
+
+        arr.append([str(datetime.now()),equipo_a,equipo_b,cuota_a,cuota_x,cuota_b])
+        
+    append_csv("at",arr)
 
 def req_dorado():
 
@@ -82,8 +91,14 @@ def req_dorado():
     
     total.append(temp)
 
+    arr=[]
+
     for i in total:
         print(i)
+        arr.append([str(datetime.now()),i[0][1],i[2][1],i[0][0],i[1][0],i[2][0]])
+
+    append_csv("dorado",arr)
+
 
 def req_betway():
 
@@ -154,6 +169,7 @@ def req_betway():
         time.sleep(1)
 
     sopa = BeautifulSoup(driver.page_source, "html.parser")
+    arr=[]
 
     for i in div_elementos:
         
@@ -178,10 +194,17 @@ def req_betway():
             print(away,cuotas[2].text)
             print()
 
+            arr.append([str(datetime.now()),home,away,cuotas[0].text,cuotas[1].text,cuotas[2].text])
+    
+    append_csv("betway",arr)
+
     #time.sleep(100)
     return
 
 def req_betano():
+
+    arr=[]
+
     cabeza={
         "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0"
     }
@@ -189,16 +212,22 @@ def req_betano():
     data=q.json()
 
     for i in data["data"]["blocks"][0]["events"]:
-        print()
+        print("-"*50)
 
         for j in i["markets"][0]["selections"]:
             print(j["fullName"],j["price"])
+        
+
+        arr.append([str(datetime.now()),i["markets"][0]["selections"][0]["fullName"],i["markets"][0]["selections"][2]["fullName"],i["markets"][0]["selections"][0]["price"],i["markets"][0]["selections"][1]["price"],i["markets"][0]["selections"][2]["price"]])
         #print(i["name"])
-        print()
+        print("-"*50)
+
+    append_csv("betano",arr)
+
 #    print(q.json())
 
 
-req_apuesta_total()
-req_dorado()
-req_betano()
+#req_apuesta_total()
+#req_dorado()
+#req_betano()
 req_betway()

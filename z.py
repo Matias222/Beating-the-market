@@ -24,4 +24,9 @@ a="""<div class="collapsablePanel" collectionitem="soccer_copa-america-2024_matc
 
 #print(get_item(a))
 
-print(extraer_fecha("soccer_copa-america-2024_matches_2024-06-23"))
+#print(extraer_fecha("soccer_copa-america-2024_matches_2024-06-23"))
+
+from datetime import datetime
+now = datetime.now()
+
+print(now)
