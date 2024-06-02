@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from proxy_credenciales import proxy,proxy_url,proxy_host, proxy_password, proxy_username
 
 
-import requests, time, pyautogui
+import requests, time
 from datetime import datetime
 
 def extraer_fecha(cadena):
@@ -60,18 +60,7 @@ def req_betway():
 
         enableCursor();
     """
-
-
-    proxy_sel = {
-    'proxy': {
-        'http': proxy_url,
-        'https': proxy_url,
-        'no_proxy': 'localhost,127.0.0.1'  # exclude localhost from proxying
-    }
-    }
-
-
-
+    
     options = webdriver.ChromeOptions()
     options.set_capability(
             "goog:loggingPrefs", {"performance": "ALL"}
@@ -91,14 +80,8 @@ def req_betway():
     driver = webdriver.Chrome(options=options)
 
     driver.get("https://betway.com/es/sports/sct/soccer/copa-america-2024")
-    time.sleep(1)
     
-    #pyautogui.typewrite(proxy_username)
-    #pyautogui.press('tab')
-    #pyautogui.typewrite(proxy_password)
-    #pyautogui.press('enter')
-
-    time.sleep(10)
+    time.sleep(15)
     
     print(driver.page_source)
 
@@ -112,14 +95,14 @@ def req_betway():
     )
 
     element.click()
-    
-    time.sleep(3.5)
+
+    time.sleep(15)
 
     sopa = BeautifulSoup(driver.page_source, "html.parser")
     div_elementos=sopa.find_all('div',{'data-widget':"""EventTableListWidget[soccer_copa-america-2024_matches, soccer_copa-america-2024_matches]""",'class':"eventTableItemCollection"})
     div_elementos=div_elementos[0].find_all('div', recursive=False)
 
-    print("LISTO")
+    print("LISTO",len(div_elementos))
 
     for i in range(3,len(div_elementos)):
         
@@ -129,7 +112,7 @@ def req_betway():
         actions.move_to_element(element).click().perform()
         print(i)
 
-        time.sleep(1)
+        time.sleep(2)
 
     sopa = BeautifulSoup(driver.page_source, "html.parser")
     arr=[]
@@ -159,7 +142,6 @@ def req_betway():
 
             arr.append([str(datetime.now()),home,away,cuotas[0].text,cuotas[1].text,cuotas[2].text])
     
-    #time.sleep(100)
     return arr
 
 req_betway()
