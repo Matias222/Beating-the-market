@@ -6,10 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from escribir_csv import append_csv
 from datetime import datetime
 from bs4 import BeautifulSoup
-from proxy_credenciales import proxy,proxy_url
+from proxy_credenciales import proxy,proxy_url,proxy_host, proxy_password, proxy_username
 
 
-import requests, time
+import requests, time, pyautogui
 
 def extraer_fecha(cadena):
     temp=""
@@ -139,24 +139,33 @@ def req_betway():
     }
     }
 
+
+
     options = webdriver.ChromeOptions()
     options.set_capability(
             "goog:loggingPrefs", {"performance": "ALL"}
         )
-
-    options.add_argument("--headless=new")
+    options.add_argument(f'--proxy-server={proxy_host}')
+    #options.add_argument("--headless=new")
     options.add_argument('disable-gpu')
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--start-maximized")
     options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36")
 
-    webdriver.DesiredCapabilities.CHROME['proxy'] = proxy_sel
-
     driver = webdriver.Chrome(options=options)
 
     driver.get("https://betway.com/es/sports/sct/soccer/copa-america-2024")
+    time.sleep(1)
+    
+    pyautogui.typewrite(proxy_username)
+    pyautogui.press('tab')
+    pyautogui.typewrite(proxy_password)
+    pyautogui.press('enter')
+
     time.sleep(10)
     
+    print(driver.page_source)
+
     actions = ActionChains(driver)
     driver.execute_script(enable_cursor)    
 
@@ -244,7 +253,7 @@ def req_betano():
 
 #    print(q.json())
 
-req_apuesta_total()
-req_dorado()
-req_betano()
+#req_apuesta_total()
+#req_dorado()
+#req_betano()
 req_betway()

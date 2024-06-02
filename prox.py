@@ -6,7 +6,7 @@ proxy_password = "tfpwy4ggrik9"
 proxy_host = "brd.superproxy.io:22225"
 session_id = random.random()
 
-proxy_url = f'http://{proxy_username}-session-{session_id}:{proxy_password}@{proxy_host}'
+proxy_url = f'http://{proxy_host}'
 
 print(proxy_url)
 
