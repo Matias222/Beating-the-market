@@ -128,18 +128,22 @@ def req_betway():
         enableCursor();
     """
 
-
     options = webdriver.ChromeOptions()
     options.set_capability(
             "goog:loggingPrefs", {"performance": "ALL"}
         )
 
+    options.add_argument("--headless=new")
+    options.add_argument('disable-gpu')
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--start-maximized")
+    options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36")
+
     driver = webdriver.Chrome(options=options)
 
     driver.get("https://betway.com/es/sports/sct/soccer/copa-america-2024")
-        
-    #time.sleep(10)
-
+    time.sleep(10)
+    
     actions = ActionChains(driver)
     driver.execute_script(enable_cursor)    
 
@@ -227,8 +231,7 @@ def req_betano():
 
 #    print(q.json())
 
-
-#req_apuesta_total()
-#req_dorado()
-#req_betano()
+req_apuesta_total()
+req_dorado()
+req_betano()
 req_betway()
