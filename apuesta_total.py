@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime
+from proxy_credenciales import proxy
 
 def req_apuesta_total():
 
