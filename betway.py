@@ -60,7 +60,7 @@ def req_betway():
 
         enableCursor();
     """
-    
+
     options = webdriver.ChromeOptions()
     options.set_capability(
             "goog:loggingPrefs", {"performance": "ALL"}
@@ -143,5 +143,3 @@ def req_betway():
             arr.append([str(datetime.now()),home,away,cuotas[0].text,cuotas[1].text,cuotas[2].text])
     
     return arr
-
-req_betway()
