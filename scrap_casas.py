@@ -6,6 +6,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from escribir_csv import append_csv
 from datetime import datetime
 from bs4 import BeautifulSoup
+from proxy_credenciales import proxy,proxy_url
+
 
 import requests, time
 
@@ -33,7 +35,7 @@ def get_item(cadena):
 
 def req_apuesta_total():
 
-    apuesta_total=requests.get("https://sb2frontend-altenar2.biahosted.com/api/Sportsbook/GetEvents?timezoneOffset=300&langId=4&skinName=apuestatotal1&configId=1&culture=es-ES&countryCode=PE&deviceType=Mobile&numformat=en&integration=apuestatotal1&sportids=66&categoryids=0&champids=3147&group=AllEvents&period=periodall&withLive=false&outrightsDisplay=none&marketTypeIds=&couponType=0&marketGroupId=0&startDate=2024-05-27T02%3A09%3A00.000Z&endDate=2024-06-03T02%3A09%3A00.000Z")
+    apuesta_total=requests.get("https://sb2frontend-altenar2.biahosted.com/api/Sportsbook/GetEvents?timezoneOffset=300&langId=4&skinName=apuestatotal1&configId=1&culture=es-ES&countryCode=PE&deviceType=Mobile&numformat=en&integration=apuestatotal1&sportids=66&categoryids=0&champids=3147&group=AllEvents&period=periodall&withLive=false&outrightsDisplay=none&marketTypeIds=&couponType=0&marketGroupId=0&startDate=2024-05-27T02%3A09%3A00.000Z&endDate=2024-06-03T02%3A09%3A00.000Z",proxies=proxy)
 
     dic=apuesta_total.json()
     arr=[]
@@ -64,7 +66,7 @@ def req_apuesta_total():
 
 def req_dorado():
 
-    dorado=requests.get("https://sb2frontend-altenar2.biahosted.com/api/widget/GetEvents?culture=es-ES&timezoneOffset=300&integration=doradobet&deviceType=1&numFormat=en-GB&countryCode=PE&eventCount=0&sportId=0&champIds=3147")
+    dorado=requests.get("https://sb2frontend-altenar2.biahosted.com/api/widget/GetEvents?culture=es-ES&timezoneOffset=300&integration=doradobet&deviceType=1&numFormat=en-GB&countryCode=PE&eventCount=0&sportId=0&champIds=3147",proxies=proxy)
 
     dic=dorado.json()
     
@@ -128,6 +130,15 @@ def req_betway():
         enableCursor();
     """
 
+
+    proxy_sel = {
+    'proxy': {
+        'http': proxy_url,
+        'https': proxy_url,
+        'no_proxy': 'localhost,127.0.0.1'  # exclude localhost from proxying
+    }
+    }
+
     options = webdriver.ChromeOptions()
     options.set_capability(
             "goog:loggingPrefs", {"performance": "ALL"}
@@ -138,6 +149,8 @@ def req_betway():
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--start-maximized")
     options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36")
+
+    webdriver.DesiredCapabilities.CHROME['proxy'] = proxy_sel
 
     driver = webdriver.Chrome(options=options)
 
@@ -213,7 +226,7 @@ def req_betano():
     cabeza={
         "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0"
     }
-    q=requests.get("https://www.betano.pe/api/sport/futbol/campeonatos/copa-america/188650/?req=la,s,stnf,c,mb,mbl",headers=cabeza)
+    q=requests.get("https://www.betano.pe/api/sport/futbol/campeonatos/copa-america/188650/?req=la,s,stnf,c,mb,mbl",headers=cabeza,proxies=proxy)
     data=q.json()
 
     for i in data["data"]["blocks"][0]["events"]:
