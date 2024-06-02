@@ -60,7 +60,6 @@ def req_betway():
 
         enableCursor();
     """
-
     options = webdriver.ChromeOptions()
     options.set_capability(
             "goog:loggingPrefs", {"performance": "ALL"}
